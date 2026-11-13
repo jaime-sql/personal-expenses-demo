@@ -40,7 +40,7 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Sync Notebook to Databricks
+      - name: Sync Notebooks to Databricks Workspace
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
@@ -49,22 +49,34 @@ jobs:
           import os, base64, urllib.request, json
           host = os.environ['DATABRICKS_HOST'].rstrip('/')
           token = os.environ['DATABRICKS_TOKEN']
-          with open('scripts/etl_load_from_volume.py', 'rb') as f:
-              content = base64.b64encode(f.read()).decode('ascii')
-          
-          target_path = '/Workspace/Users/jg0592@gmail.com/personal_expenses/etl_load_from_volume'
-          req = urllib.request.Request(
-              f'{host}/api/2.0/workspace/import',
-              data=json.dumps({
-                  'path': target_path,
-                  'format': 'SOURCE',
-                  'language': 'PYTHON',
-                  'content': content,
-                  'overwrite': True
-              }).encode('utf-8'),
-              headers={'Authorization': f'Bearer {token}', 'Content-Type': 'application/json'},
-              method='POST'
-          )
-          urllib.request.urlopen(req)
-          print('Successfully deployed notebook to:', target_path)
+
+          notebooks = [
+              ('scripts/etl_load_from_volume.py', '/Workspace/Users/jg0592@gmail.com/personal_expenses/etl_load_from_volume'),
+              ('scripts/concapan_etl_load_from_volume.py', '/Workspace/Users/jg0592@gmail.com/personal_expenses/concapan_etl_load_from_volume')
+          ]
+
+          for local_file, target_path in notebooks:
+              with open(local_file, 'rb') as f:
+                  content = base64.b64encode(f.read()).decode('ascii')
+              req = urllib.request.Request(
+                  f'{host}/api/2.0/workspace/import',
+                  data=json.dumps({
+                      'path': target_path,
+                      'format': 'SOURCE',
+                      'language': 'PYTHON',
+                      'content': content,
+                      'overwrite': True
+                  }).encode('utf-8'),
+                  headers={'Authorization': f'Bearer {token}', 'Content-Type': 'application/json'},
+                  method='POST'
+              )
+              urllib.request.urlopen(req)
+              print('Successfully synced notebook:', target_path)
           "
+
+      - name: Update CONCAPAN Dashboard
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+        run: |
+          python scripts/deploy_concapan_dashboard.py

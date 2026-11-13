@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Live Demo: Gmail to Databricks Pipeline</title>
+  <title>CONCAPAN & Personal Expenses: Live Databricks Pipeline</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -17,15 +17,15 @@
   <header class="border-b border-slate-800 bg-slate-900/60 backdrop-blur sticky top-0 z-50">
     <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
       <div class="flex items-center space-x-3">
-        <span class="p-2 rounded-lg bg-red-600/20 text-red-400 font-bold text-xl"><i class="fa-solid fa-fire-flame-curved"></i></span>
+        <span class="p-2 rounded-lg bg-red-600/20 text-red-400 font-bold text-xl"><i class="fa-solid fa-bolt"></i></span>
         <div>
-          <h1 class="text-lg font-bold text-white tracking-tight">Bank Expenses &bull; Live Demo</h1>
-          <p class="text-xs text-slate-400">Gmail Alerts &rarr; Unity Catalog &rarr; Lakeview Dashboard</p>
+          <h1 class="text-lg font-bold text-white tracking-tight">CONCAPAN 2026 &bull; Data Pipeline Live Demo</h1>
+          <p class="text-xs text-slate-400">Gmail Alerts &rarr; Unity Catalog &rarr; concapan-expenses-etl &rarr; Lakeview Dashboard</p>
         </div>
       </div>
       <div class="flex items-center space-x-3">
         <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5 animate-pulse"></span> Pipeline Activo
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5 animate-pulse"></span> CONCAPAN ETL Activo
         </span>
         <a href="https://github.com/jaime-sql/personal-expenses-demo" class="text-slate-400 hover:text-white text-sm transition">
           <i class="fa-brands fa-github text-lg"></i>
@@ -38,17 +38,17 @@
   <section class="max-w-6xl mx-auto px-6 py-12">
     <div class="text-center max-w-3xl mx-auto mb-14">
       <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20 mb-4">
-        <i class="fa-solid fa-shield-halved"></i> Capa de Privacidad & Enmascaramiento PII Activa
+        <i class="fa-solid fa-shield-halved"></i> Capa PII Activa &bull; Databricks Free Edition Validado
       </div>
       <h2 class="text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
-        Pipeline de Datos Automatizado con <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-orange-400 to-amber-300">Databricks</span>
+        Pipeline CONCAPAN en <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-orange-400 to-amber-300">Databricks</span>
       </h2>
       <p class="mt-4 text-base text-slate-300 leading-relaxed">
-        Extracción continua de transacciones bancarias desde Gmail, ingesta en formato Medallion (Bronze/Silver) en Unity Catalog y analítica en vivo mediante Databricks Lakeview.
+        Extracción de transacciones bancarias, clasificación por eje operativo (viajes, logística, viáticos y catering), orquestación con <code>concapan-expenses-etl</code> y dashboard ejecutivo en Databricks Lakeview.
       </p>
     </div>
 
-    <!-- Medallion Architecture Cards -->
+    <!-- Databricks Architecture Grid -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12">
       <!-- Gmail Ingest -->
       <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-xl relative overflow-hidden">
@@ -56,7 +56,7 @@
           <i class="fa-regular fa-envelope text-red-400"></i> Origen: Gmail
         </div>
         <h3 class="text-base font-bold text-white mb-2">Alertas Bancarias</h3>
-        <p class="text-xs text-slate-400 mb-4">Filtrado seguro por remitentes autorizados (Promerica, Cuscatlán, Credicomer, BI, BAC).</p>
+        <p class="text-xs text-slate-400 mb-4">Bancos autorizados: Promerica, Cuscatlán, Credicomer, BI, BAC.</p>
         <div class="text-[11px] font-mono bg-slate-950 p-2.5 rounded-lg border border-slate-800 text-slate-300">
           from:alertas@banco<br/>
           authuser: j***@gmail.com
@@ -66,86 +66,94 @@
       <!-- Bronze Layer -->
       <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-xl relative overflow-hidden">
         <div class="text-xs font-semibold uppercase tracking-wider text-amber-500 mb-2 flex items-center gap-2">
-          <i class="fa-solid fa-layer-group"></i> Bronze: Raw Files
+          <i class="fa-solid fa-layer-group"></i> Bronze Volume
         </div>
-        <h3 class="text-base font-bold text-white mb-2">UC Volume Landing</h3>
-        <p class="text-xs text-slate-400 mb-4">Archivos JSONL inmutables por lote diario en Unity Catalog Volumes.</p>
+        <h3 class="text-base font-bold text-white mb-2">landing/gmail</h3>
+        <p class="text-xs text-slate-400 mb-4">Lotes inmutables JSONL cargados por Files API con marcas ISO 8601 UTC.</p>
         <div class="text-[11px] font-mono bg-slate-950 p-2.5 rounded-lg border border-slate-800 text-amber-300">
           /landing/gmail/<br/>inc_YYYYMMDD_HHMM.jsonl
         </div>
       </div>
 
-      <!-- Silver Layer -->
+      <!-- Silver & Gold Layer -->
       <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-xl relative overflow-hidden">
         <div class="text-xs font-semibold uppercase tracking-wider text-blue-400 mb-2 flex items-center gap-2">
-          <i class="fa-solid fa-wand-magic-sparkles"></i> Silver: Delta Table
+          <i class="fa-solid fa-microchip"></i> ETL: concapan
         </div>
-        <h3 class="text-base font-bold text-white mb-2">silver_charges</h3>
-        <p class="text-xs text-slate-400 mb-4">Deduplicación por hash SHA-256, categorización inteligente y limpieza PII.</p>
+        <h3 class="text-base font-bold text-white mb-2">concapan_silver</h3>
+        <p class="text-xs text-slate-400 mb-4">Job <code>199860078036455</code>: etiquetado de eventos y métricas de viaje.</p>
         <div class="text-[11px] font-mono bg-slate-950 p-2.5 rounded-lg border border-slate-800 text-blue-300">
-          workspace.personal_expenses<br/>.silver_charges
+          workspace.personal_expenses<br/>.concapan_silver_charges
         </div>
       </div>
 
       <!-- Lakeview Dashboard -->
       <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-xl relative overflow-hidden">
         <div class="text-xs font-semibold uppercase tracking-wider text-emerald-400 mb-2 flex items-center gap-2">
-          <i class="fa-solid fa-chart-pie"></i> Visualización: Lakeview
+          <i class="fa-solid fa-chart-line"></i> Dashboard Lakeview
         </div>
-        <h3 class="text-base font-bold text-white mb-2">Personal Expenses YTD</h3>
-        <p class="text-xs text-slate-400 mb-4">Dashboard interactivo conectado a SQL Warehouse serverless de Databricks.</p>
+        <h3 class="text-base font-bold text-white mb-2">CONCAPAN Analytics</h3>
+        <p class="text-xs text-slate-400 mb-4">Tablero ejecutivo con KPIs, barras horizontales, tendencia temporal y tabla de auditoría.</p>
         <div class="text-[11px] font-mono bg-slate-950 p-2.5 rounded-lg border border-slate-800 text-emerald-300">
-          ID: 01f1d247cc6e1ea9<br/>Dataset: ds_consumption
+          ID: 01f1df80225d1080<br/>Publicado con credenciales
         </div>
       </div>
     </div>
 
-    <!-- Live Demo Features -->
+    <!-- Live Execution & Jobs in Databricks -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-      <!-- Live Parsing Preview with Masking -->
+      <!-- Live Jobs Overview -->
       <div class="p-6 rounded-2xl bg-slate-900/60 border border-slate-800">
         <div class="flex items-center justify-between mb-4">
           <h3 class="font-bold text-white flex items-center gap-2">
-            <i class="fa-solid fa-terminal text-orange-400"></i> Salida de Extracción con Enmascaramiento
+            <i class="fa-solid fa-gears text-orange-400"></i> Jobs Activos en Databricks Free Edition
           </h3>
-          <span class="text-xs text-slate-400">Modo Demo En Vivo</span>
+          <span class="text-xs font-mono text-emerald-400">2 Jobs Registrados</span>
         </div>
-        <pre class="text-xs bg-slate-950 p-4 rounded-xl border border-slate-800 text-slate-300 overflow-x-auto leading-relaxed">
-<code>[DEMO_MASK_PII=1] Ingesta y Parsing en Ejecución:
-  2026-11-11  Promerica  **43   $24.55   purchase   fuel         ESTAC DE SER PUMA...
-  2026-11-11  Cuscatlán  **81    $3.50   purchase   utilities    TIGO EL SALVADOR...
-  2026-11-11  Promerica  **43   $32.65   purchase   restaurants  PIZZA HUT...
-  2026-11-11  Promerica  **43  $282.81   purchase   other        PAGGO APP *...
-
-&bull; Tarjetas enmascaradas: **43, **81
-&bull; Cuentas & Nombres personales: Ocultos
-&bull; Cero secretos expuestos en código</code></pre>
+        <div class="space-y-3">
+          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+            <div>
+              <p class="text-sm font-semibold text-white">concapan-expenses-etl <span class="text-xs text-emerald-400 font-normal ml-2">● Nuevo (Demo)</span></p>
+              <p class="text-xs text-slate-400">Job ID: <code class="text-slate-300">199860078036455</code> &bull; Task: concapan_etl_task</p>
+            </div>
+            <span class="px-2 py-1 bg-emerald-500/10 text-emerald-400 rounded text-xs font-medium border border-emerald-500/20">SUCCESS</span>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+            <div>
+              <p class="text-sm font-semibold text-white">personal-expenses-etl <span class="text-xs text-slate-400 font-normal ml-2">● Producción</span></p>
+              <p class="text-xs text-slate-400">Job ID: <code class="text-slate-300">829440227192121</code> &bull; Task: etl_load_from_volume</p>
+            </div>
+            <span class="px-2 py-1 bg-slate-800 text-slate-300 rounded text-xs font-medium">Original</span>
+          </div>
+        </div>
       </div>
 
-      <!-- CI/CD and Governance -->
+      <!-- Links to Live Databricks Dashboards -->
       <div class="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 flex flex-col justify-between">
         <div>
           <h3 class="font-bold text-white flex items-center gap-2 mb-4">
-            <i class="fa-solid fa-code-branch text-purple-400"></i> CI/CD con GitHub Actions & Gobernanza
+            <i class="fa-solid fa-gauge-high text-blue-400"></i> Dashboards Disponibles en Lakeview
           </h3>
-          <ul class="space-y-3 text-xs text-slate-300">
-            <li class="flex items-start gap-2">
-              <i class="fa-solid fa-check text-emerald-400 mt-0.5"></i>
-              <span><strong>Despliegue Continuo:</strong> Cada push a <code>main</code> valida y despliega notebooks directamente a Databricks Workspace vía REST API.</span>
-            </li>
-            <li class="flex items-start gap-2">
-              <i class="fa-solid fa-check text-emerald-400 mt-0.5"></i>
-              <span><strong>Secretos Protegidos:</strong> Credenciales (<code>DATABRICKS_HOST</code> y <code>DATABRICKS_TOKEN</code>) administradas por GitHub Secrets.</span>
-            </li>
-            <li class="flex items-start gap-2">
-              <i class="fa-solid fa-check text-emerald-400 mt-0.5"></i>
-              <span><strong>Unity Catalog Governance:</strong> Control granular de acceso, linaje de datos y volúmenes administrados.</span>
-            </li>
-          </ul>
+          <div class="space-y-3">
+            <a href="https://dbc-6b5953ee-73b5.cloud.databricks.com/dashboardsv3/01f1df80225d108082ecb2b8ace88bd7/published" target="_blank" class="block p-3 rounded-xl bg-blue-500/10 border border-blue-500/20 hover:border-blue-400 transition">
+              <div class="flex items-center justify-between">
+                <p class="text-sm font-semibold text-blue-300"><i class="fa-solid fa-arrow-up-right-from-square text-xs mr-1"></i> CONCAPAN 2026 — Expenses Analytics</p>
+                <span class="text-xs bg-blue-600 text-white px-2 py-0.5 rounded font-medium">Nuevo Diseño</span>
+              </div>
+              <p class="text-xs text-slate-400 mt-1">Dashboard con KPIs de viáticos, distribución de ejes operativos y auditoría.</p>
+            </a>
+            <a href="https://dbc-6b5953ee-73b5.cloud.databricks.com/dashboardsv3/01f1d247cc6e1ea9bd62f41ab5d742b7/published" target="_blank" class="block p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-slate-700 transition">
+              <div class="flex items-center justify-between">
+                <p class="text-sm font-semibold text-slate-200"><i class="fa-solid fa-arrow-up-right-from-square text-xs mr-1"></i> Personal Expenses YTD</p>
+                <span class="text-xs text-slate-400">Base</span>
+              </div>
+              <p class="text-xs text-slate-400 mt-1">Dashboard histórico con filtros por mes/año y enlace a correos fuente.</p>
+            </a>
+          </div>
         </div>
-        <div class="mt-6 pt-4 border-t border-slate-800 text-xs text-slate-400 flex items-center justify-between">
-          <span>Automatizado por Antigravity</span>
-          <span class="font-mono">v1.0 &bull; 2026</span>
+        <div class="mt-4 pt-3 border-t border-slate-800 text-xs text-slate-400 flex items-center justify-between">
+          <span>CI/CD vía GitHub Actions</span>
+          <span class="font-mono text-emerald-400">100% Automatizado</span>
         </div>
       </div>
     </div>
@@ -153,7 +161,7 @@
 
   <!-- Footer -->
   <footer class="border-t border-slate-800 py-6 text-center text-xs text-slate-500">
-    <p>Databricks &bull; Gmail &bull; GitHub Actions &bull; GitHub Pages &mdash; Demo en Vivo</p>
+    <p>Databricks &bull; CONCAPAN 2026 &bull; GitHub Actions &bull; GitHub Pages &mdash; Demo en Vivo</p>
   </footer>
 </body>
 </html>
