@@ -1,0 +1,70 @@
+name: Databricks Pipeline CI/CD
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'scripts/**'
+      - 'config/**'
+      - '.github/workflows/deploy.yml'
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Validate Parsers & Rules
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run Alert Parser Tests
+        run: |
+          python -m unittest tests/test_merchant_and_source_email.py
+
+  deploy:
+    name: Deploy to Databricks Workspace
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Sync Notebook to Databricks
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+        run: |
+          python -c "
+          import os, base64, urllib.request, json
+          host = os.environ['DATABRICKS_HOST'].rstrip('/')
+          token = os.environ['DATABRICKS_TOKEN']
+          with open('scripts/etl_load_from_volume.py', 'rb') as f:
+              content = base64.b64encode(f.read()).decode('ascii')
+          
+          target_path = '/Workspace/Users/jg0592@gmail.com/personal_expenses/etl_load_from_volume'
+          req = urllib.request.Request(
+              f'{host}/api/2.0/workspace/import',
+              data=json.dumps({
+                  'path': target_path,
+                  'format': 'SOURCE',
+                  'language': 'PYTHON',
+                  'content': content,
+                  'overwrite': True
+              }).encode('utf-8'),
+              headers={'Authorization': f'Bearer {token}', 'Content-Type': 'application/json'},
+              method='POST'
+          )
+          urllib.request.urlopen(req)
+          print('Successfully deployed notebook to:', target_path)
+          "

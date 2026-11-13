@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+gmail_raw/
+landing/
+out/
+*.jsonl
+.env

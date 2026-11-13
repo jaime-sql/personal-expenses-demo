@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Demo: Gmail to Databricks Pipeline</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+  <!-- Header -->
+  <header class="border-b border-slate-800 bg-slate-900/60 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <span class="p-2 rounded-lg bg-red-600/20 text-red-400 font-bold text-xl"><i class="fa-solid fa-fire-flame-curved"></i></span>
+        <div>
+          <h1 class="text-lg font-bold text-white tracking-tight">Bank Expenses &bull; Live Demo</h1>
+          <p class="text-xs text-slate-400">Gmail Alerts &rarr; Unity Catalog &rarr; Lakeview Dashboard</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5 animate-pulse"></span> Pipeline Activo
+        </span>
+        <a href="https://github.com/jaime-sql/personal-expenses-demo" class="text-slate-400 hover:text-white text-sm transition">
+          <i class="fa-brands fa-github text-lg"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="max-w-6xl mx-auto px-6 py-12">
+    <div class="text-center max-w-3xl mx-auto mb-14">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20 mb-4">
+        <i class="fa-solid fa-shield-halved"></i> Capa de Privacidad & Enmascaramiento PII Activa
+      </div>
+      <h2 class="text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
+        Pipeline de Datos Automatizado con <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-orange-400 to-amber-300">Databricks</span>
+      </h2>
+      <p class="mt-4 text-base text-slate-300 leading-relaxed">
+        Extracción continua de transacciones bancarias desde Gmail, ingesta en formato Medallion (Bronze/Silver) en Unity Catalog y analítica en vivo mediante Databricks Lakeview.
+      </p>
+    </div>
+
+    <!-- Medallion Architecture Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12">
+      <!-- Gmail Ingest -->
+      <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-xl relative overflow-hidden">
+        <div class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2 flex items-center gap-2">
+          <i class="fa-regular fa-envelope text-red-400"></i> Origen: Gmail
+        </div>
+        <h3 class="text-base font-bold text-white mb-2">Alertas Bancarias</h3>
+        <p class="text-xs text-slate-400 mb-4">Filtrado seguro por remitentes autorizados (Promerica, Cuscatlán, Credicomer, BI, BAC).</p>
+        <div class="text-[11px] font-mono bg-slate-950 p-2.5 rounded-lg border border-slate-800 text-slate-300">
+          from:alertas@banco<br/>
+          authuser: j***@gmail.com
+        </div>
+      </div>
+
+      <!-- Bronze Layer -->
+      <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-xl relative overflow-hidden">
+        <div class="text-xs font-semibold uppercase tracking-wider text-amber-500 mb-2 flex items-center gap-2">
+          <i class="fa-solid fa-layer-group"></i> Bronze: Raw Files
+        </div>
+        <h3 class="text-base font-bold text-white mb-2">UC Volume Landing</h3>
+        <p class="text-xs text-slate-400 mb-4">Archivos JSONL inmutables por lote diario en Unity Catalog Volumes.</p>
+        <div class="text-[11px] font-mono bg-slate-950 p-2.5 rounded-lg border border-slate-800 text-amber-300">
+          /landing/gmail/<br/>inc_YYYYMMDD_HHMM.jsonl
+        </div>
+      </div>
+
+      <!-- Silver Layer -->
+      <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-xl relative overflow-hidden">
+        <div class="text-xs font-semibold uppercase tracking-wider text-blue-400 mb-2 flex items-center gap-2">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> Silver: Delta Table
+        </div>
+        <h3 class="text-base font-bold text-white mb-2">silver_charges</h3>
+        <p class="text-xs text-slate-400 mb-4">Deduplicación por hash SHA-256, categorización inteligente y limpieza PII.</p>
+        <div class="text-[11px] font-mono bg-slate-950 p-2.5 rounded-lg border border-slate-800 text-blue-300">
+          workspace.personal_expenses<br/>.silver_charges
+        </div>
+      </div>
+
+      <!-- Lakeview Dashboard -->
+      <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-xl relative overflow-hidden">
+        <div class="text-xs font-semibold uppercase tracking-wider text-emerald-400 mb-2 flex items-center gap-2">
+          <i class="fa-solid fa-chart-pie"></i> Visualización: Lakeview
+        </div>
+        <h3 class="text-base font-bold text-white mb-2">Personal Expenses YTD</h3>
+        <p class="text-xs text-slate-400 mb-4">Dashboard interactivo conectado a SQL Warehouse serverless de Databricks.</p>
+        <div class="text-[11px] font-mono bg-slate-950 p-2.5 rounded-lg border border-slate-800 text-emerald-300">
+          ID: 01f1d247cc6e1ea9<br/>Dataset: ds_consumption
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Demo Features -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+      <!-- Live Parsing Preview with Masking -->
+      <div class="p-6 rounded-2xl bg-slate-900/60 border border-slate-800">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-terminal text-orange-400"></i> Salida de Extracción con Enmascaramiento
+          </h3>
+          <span class="text-xs text-slate-400">Modo Demo En Vivo</span>
+        </div>
+        <pre class="text-xs bg-slate-950 p-4 rounded-xl border border-slate-800 text-slate-300 overflow-x-auto leading-relaxed">
+<code>[DEMO_MASK_PII=1] Ingesta y Parsing en Ejecución:
+  2026-11-11  Promerica  **43   $24.55   purchase   fuel         ESTAC DE SER PUMA...
+  2026-11-11  Cuscatlán  **81    $3.50   purchase   utilities    TIGO EL SALVADOR...
+  2026-11-11  Promerica  **43   $32.65   purchase   restaurants  PIZZA HUT...
+  2026-11-11  Promerica  **43  $282.81   purchase   other        PAGGO APP *...
+
+&bull; Tarjetas enmascaradas: **43, **81
+&bull; Cuentas & Nombres personales: Ocultos
+&bull; Cero secretos expuestos en código</code></pre>
+      </div>
+
+      <!-- CI/CD and Governance -->
+      <div class="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 flex flex-col justify-between">
+        <div>
+          <h3 class="font-bold text-white flex items-center gap-2 mb-4">
+            <i class="fa-solid fa-code-branch text-purple-400"></i> CI/CD con GitHub Actions & Gobernanza
+          </h3>
+          <ul class="space-y-3 text-xs text-slate-300">
+            <li class="flex items-start gap-2">
+              <i class="fa-solid fa-check text-emerald-400 mt-0.5"></i>
+              <span><strong>Despliegue Continuo:</strong> Cada push a <code>main</code> valida y despliega notebooks directamente a Databricks Workspace vía REST API.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <i class="fa-solid fa-check text-emerald-400 mt-0.5"></i>
+              <span><strong>Secretos Protegidos:</strong> Credenciales (<code>DATABRICKS_HOST</code> y <code>DATABRICKS_TOKEN</code>) administradas por GitHub Secrets.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <i class="fa-solid fa-check text-emerald-400 mt-0.5"></i>
+              <span><strong>Unity Catalog Governance:</strong> Control granular de acceso, linaje de datos y volúmenes administrados.</span>
+            </li>
+          </ul>
+        </div>
+        <div class="mt-6 pt-4 border-t border-slate-800 text-xs text-slate-400 flex items-center justify-between">
+          <span>Automatizado por Antigravity</span>
+          <span class="font-mono">v1.0 &bull; 2026</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800 py-6 text-center text-xs text-slate-500">
+    <p>Databricks &bull; Gmail &bull; GitHub Actions &bull; GitHub Pages &mdash; Demo en Vivo</p>
+  </footer>
+</body>
+</html>
