@@ -20,6 +20,8 @@ Todo este ecosistema fue construido, probado, corregido y desplegado en producci
 ## 🛡️ Aislamiento de Entornos
 * **Producción:** [`jaime-sql/personal-expenses-etl`](https://github.com/jaime-sql/personal-expenses-etl) &rarr; **Intacto y limpio** (Job ID `829440227192121`).
 * **Demo CONCAPAN:** [`jaime-sql/personal-expenses-demo`](https://github.com/jaime-sql/personal-expenses-demo) &rarr; Job ID `199860078036455` (`concapan-expenses-etl`) y Dashboard Lakeview `01f1df80225d1080`.
+* **Presentación en Google Drive (Slides):** [CONCAPAN 2026 — Data Engineering & AI Demo](https://docs.google.com/presentation/d/1GuaH6GvJIjgGOAbo67ILgL5RWCvZdagAMxLZNEHZOEE/edit)
+* **Portal GitHub Pages:** [https://jaime-sql.github.io/personal-expenses-demo/](https://jaime-sql.github.io/personal-expenses-demo/)
 
 ---
 
@@ -152,5 +154,24 @@ flowchart TD
 ### Acto 6: DevOps, CI/CD y Documentación en Notion (1 minuto)
 * **Acción:** Mostrar en GitHub la pestaña de Actions y la página en Notion:  
   🔗 [GitHub Actions](https://github.com/jaime-sql/personal-expenses-demo/actions) &bull; [Notion Documentation](https://app.notion.com/p/417825c9c7b781b8bf79f09eafcaa0f6?pvs=204)
-* **Mensaje de cierre:**
+* **Mensaje:**
   > *"Todo el ciclo de vida del dato —código, infraestructura, seguridad, pruebas unitarias, dashboards y documentación corporativa— quedó automatizado y gobernado sin intervención manual."*
+
+---
+
+### Acto 7: Dinámica Interactiva — Reto Power BI para el Equipo de Datos (3–5 minutos)
+* **Acción:** Proyectar la diapositiva 6 de la presentación y lanzar el reto a la audiencia y equipo de BI:
+* **Parámetros de conexión a entregar en vivo:**
+  * **Conector:** Azure Databricks (nativo en Power BI Desktop).
+  * **Server Hostname:** `dbc-6b5953ee-73b5.cloud.databricks.com`
+  * **HTTP Path:** `/sql/1.0/warehouses/de62669408c45fc9`
+  * **Catálogo & Schema:** `workspace.personal_expenses`
+  * **Tabla Gold:** `concapan_gold_summary` (métricas pre-agregadas)
+  * **Tabla Silver:** `concapan_silver_charges` (detalle y `event_tag`)
+  * **Modo sugerido:** DirectQuery
+* **Objetivos del Reto:**
+  1. Conectar Power BI a la instancia de Databricks en DirectQuery.
+  2. Crear tarjetas KPI de Gasto Total ($86.1K) y Viáticos ($21.2K).
+  3. Replicar los filtros por Año, Mes y Eje Operativo.
+* **Mensaje a la audiencia:**
+  > *"Unity Catalog actúa como la única fuente de la verdad para toda la organización. Tanto Databricks Lakeview como Power BI empresarial consumen exactamente la misma capa de datos limpia, gobernada y auditable sin discrepancias."*
