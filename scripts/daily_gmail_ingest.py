@@ -9,6 +9,7 @@ Prints a local silver preview using the same parser the notebook uses.
 
 Usage: DATABRICKS_TOKEN=... python3 daily_gmail_ingest.py messages.json [--dry-run]
 """
+import email.utils
 import json, os, sys, urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
@@ -21,6 +22,23 @@ VOL_DIR = "/Volumes/workspace/personal_expenses/landing/gmail"
 LOCAL = Path(os.environ.get("LOCAL_LANDING_DIR") or (Path(__file__).resolve().parent.parent / "landing"))
 LOCAL.mkdir(parents=True, exist_ok=True)
 
+def to_iso8601(date_val):
+    if not date_val:
+        return ""
+    s = str(date_val).strip()
+    try:
+        dt = email.utils.parsedate_to_datetime(s)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    except Exception:
+        pass
+    try:
+        dt = datetime.fromisoformat(s.replace("Z", "+00:00"))
+        return dt.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    except Exception:
+        return s
+
 def to_bronze(msgs, fname, now):
     rows, seen = [], set()
     for m in msgs:
@@ -29,12 +47,13 @@ def to_bronze(msgs, fname, now):
         if not mid or not bank or mid in seen:
             continue  # not allowlisted -> dropped
         seen.add(mid)
+        recv_raw = m.get("date") or m.get("received_at")
         rows.append({
             "message_id": mid,
             "thread_id": m.get("thread_id") or m.get("threadId") or "",
             "bank": bank, "sender": sender,
             "subject": (m.get("subject") or "").strip(),
-            "received_at": m.get("date"),
+            "received_at": to_iso8601(recv_raw),
             "snippet": m.get("snippet") or "",
             "body_text": (m.get("body") or "")[:8000],
             "source_file": fname,

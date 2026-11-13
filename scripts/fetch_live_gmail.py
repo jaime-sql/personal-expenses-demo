@@ -1,11 +1,24 @@
 #!/usr/bin/env python3
 """Fetch recent bank alerts from Gmail using the gmail CLI tool."""
 import base64
+import email.utils
 import json
 import os
 import subprocess
 import sys
+from datetime import timezone
 from pathlib import Path
+
+def to_iso8601(date_str):
+    if not date_str:
+        return ""
+    try:
+        dt = email.utils.parsedate_to_datetime(date_str)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    except Exception:
+        return date_str
 
 QUERY = "from:(soluciones@promericaotp.com.sv OR alertas_tarjeta@credicomer.com.sv OR notificaciones_clientes@credicomer.com.sv OR noreply@bi.com.sv OR notificaciones@bancocuscatlan.com OR info@baccredomatic.com) newer_than:7d"
 
@@ -81,7 +94,7 @@ def main():
             "thread_id": tid,
             "from": sender,
             "subject": subject,
-            "date": date_str,
+            "date": to_iso8601(date_str),
             "snippet": snippet,
             "body": body,
         })
